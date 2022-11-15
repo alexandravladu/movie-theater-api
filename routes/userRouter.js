@@ -58,7 +58,23 @@ userRouter.get("/:id/shows", async (req, res) => {
 })
 
 
-
+userRouter.put("/:id/shows/:show_id", async (req, res) => {
+    try {
+      const user = await User.findOne({ where: { id: req.params.id } });
+      const show = await Show.findOne({ where: { id: req.params.show_id } });
+  
+      if (!user) {
+        throw new Error("Invalid user id");
+      } else if (!show) {
+        throw new Error("Invalid show id");
+      } else {
+        await user.addShow(show);
+        res.status(200).send(`${show.title} added to user.`);
+      }
+    } catch (error) {
+      res.status(400).send(error);
+    }
+  });
 
 
 
